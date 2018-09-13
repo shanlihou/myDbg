@@ -13,6 +13,13 @@
 #include "../dbg/GetPeArch.h"
 
 #pragma comment(lib, "comctl32.lib")
+#define FLOG(format, ...) \
+do{\
+    FILE *fp = fopen("D:\\flog\\flog.txt", "a+");\
+    fprintf(fp, "%s:%s:%d:", __FILE__, __FUNCTION__, __LINE__);\
+    fprintf(fp, format, __VA_ARGS__);\
+    fclose(fp);\
+}while(0)
 
 static bool FileExists(const TCHAR* file)
 {

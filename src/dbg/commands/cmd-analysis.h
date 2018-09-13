@@ -17,3 +17,4 @@ bool cbInstrGetRelocSize(int argc, char* argv[]);
 bool cbInstrExhandlers(int argc, char* argv[]);
 bool cbInstrExinfo(int argc, char* argv[]);
 bool cbInstrTraceexecute(int argc, char* argv[]);
+bool cbGetModInfo(int argc, char* argv[]);

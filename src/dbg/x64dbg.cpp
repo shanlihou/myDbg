@@ -331,6 +331,8 @@ static void registercommands()
     dbgcmdnew("GetRelocSize,grs", cbInstrGetRelocSize, true); //get relocation table size
     dbgcmdnew("exhandlers", cbInstrExhandlers, true); //enumerate exception handlers
     dbgcmdnew("exinfo", cbInstrExinfo, true); //dump last exception information
+    dbgcmdnew("gm", cbGetModInfo, true); //get mod info
+
 
     //types
     dbgcmdnew("DataUnknown", cbInstrDataUnknown, true); //mark as Unknown

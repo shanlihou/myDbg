@@ -12,6 +12,14 @@
 #include <QProcess>
 #include <QFileDialog>
 
+#define FLOG(format, ...) \
+do{\
+    FILE *fp = fopen("D:\\flog\\flog.txt", "a+");\
+    fprintf(fp, "[%s]:[%s]:[%d]:", __FILE__, __FUNCTION__, __LINE__);\
+    fprintf(fp, format, __VA_ARGS__);\
+    fclose(fp);\
+}while(0)
+
 class SymbolSearchList : public AbstractSearchList
 {
 public:
@@ -370,6 +378,7 @@ void SymbolView::moduleSelectionChanged(int index)
     std::vector<SYMBOLPTR> data;
     for(auto base : selectedModules)
     {
+        FLOG("ckz symbol base is:%d\n", base);
         DbgSymbolEnum(base, [](const SYMBOLPTR * info, void* userdata)
         {
             ((std::vector<SYMBOLPTR>*)userdata)->push_back(*info);
@@ -413,6 +422,7 @@ void SymbolView::updateSymbolList(int module_count, SYMBOLMODULEINFO* modules)
         mModuleList->stdList()->setCellContent(i, 0, ToPtrString(modules[i].base));
         mModuleList->stdList()->setCellUserdata(i, 0, modules[i].base);
         mModuleList->stdList()->setCellContent(i, 1, modName);
+        FLOG("ckz modName:%s\n", modName.toLatin1().data());
         switch(party)
         {
         case 0:

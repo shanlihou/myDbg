@@ -1,7 +1,13 @@
 #include "AbstractStdTable.h"
 #include "Bridge.h"
 #include "RichTextPainter.h"
-
+#define FLOG(format, ...) \
+do{\
+    FILE *fp = fopen("D:\\flog\\flog.txt", "a+");\
+    fprintf(fp, "[%s]:[%s]:[%d]:", __FILE__, __FUNCTION__, __LINE__);\
+    fprintf(fp, format, __VA_ARGS__);\
+    fclose(fp);\
+}while(0)
 AbstractStdTable::AbstractStdTable(QWidget* parent) : AbstractTableView(parent)
 {
     setContextMenuPolicy(Qt::CustomContextMenu);
@@ -601,6 +607,7 @@ QList<int> AbstractStdTable::getSelection() const
     selection.reserve(mSelection.toIndex - mSelection.fromIndex);
     for(int i = mSelection.fromIndex; i <= mSelection.toIndex; i++)
     {
+        FLOG("ckz select:%d\n", i);
         selection.append(i);
     }
     return selection;

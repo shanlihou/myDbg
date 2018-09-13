@@ -424,3 +424,75 @@ bool cbInstrTraceexecute(int argc, char* argv[])
     _dbg_dbgtraceexecute(addr);
     return true;
 }
+
+bool setBp(duint addr) //bp addr [,name [,type]]
+{
+    int type = UE_BREAKPOINT;
+    bool singleshoot = false;
+    short oldbytes;
+    const char* bpname = 0;
+    BREAKPOINT bp;
+    if(BpGet(addr, BPNORMAL, bpname, &bp))
+    {
+        if(!bp.enabled)
+            return DbgCmdExecDirect(StringUtils::sprintf("bpe %p", bp.addr).c_str());
+        dputs(QT_TRANSLATE_NOOP("DBG", "Breakpoint already set!"));
+        return true;
+    }
+    if(IsBPXEnabled(addr))
+    {
+        dprintf(QT_TRANSLATE_NOOP("DBG", "Error setting breakpoint at %p! (IsBPXEnabled)\n"), addr);
+        return false;
+    }
+    if(!MemRead(addr, &oldbytes, sizeof(short)))
+    {
+        dprintf(QT_TRANSLATE_NOOP("DBG", "Error setting breakpoint at %p! (memread)\n"), addr);
+        return false;
+    }
+    if(!BpNew(addr, true, singleshoot, oldbytes, BPNORMAL, type, bpname))
+    {
+        dprintf(QT_TRANSLATE_NOOP("DBG", "Error setting breakpoint at %p! (bpnew)\n"), addr);
+        return false;
+    }
+    if(!SetBPX(addr, type, (void*)cbUserBreakpoint))
+    {
+        dprintf(QT_TRANSLATE_NOOP("DBG", "Error setting breakpoint at %p! (SetBPX)\n"), addr);
+        if(!BpDelete(addr, BPNORMAL))
+            dprintf(QT_TRANSLATE_NOOP("DBG", "Error handling invalid breakpoint at %p! (bpdel)\n"), addr);
+        return false;
+    }
+    GuiUpdateAllViews();
+    if(bpname)
+        dprintf(QT_TRANSLATE_NOOP("DBG", "Breakpoint at %p (%s) set!\n"), addr, bpname);
+    else
+        dprintf(QT_TRANSLATE_NOOP("DBG", "Breakpoint at %p set!\n"), addr);
+    return true;
+}
+
+bool cbGetModInfo(int argc, char* argv[])
+{
+    if(IsArgumentsLessThan(argc, 2))
+        return false;
+
+    ModEnum([argv](const MODINFO & modInfo)
+    {
+        dprintf("ckz mod size:%d\n", modInfo.exports.size());
+        for(auto sym : modInfo.exports)
+        {
+            if(sym.name.find(argv[1]) != std::string::npos)
+            {
+                duint addr = modInfo.base + sym.rva;
+                dprintf("ckz find name is:%s %x %d\n", sym.name.c_str(), addr, setBp(addr) ? 1 : 0);
+
+            }
+        }
+    });
+
+    //SymEnumFromCache(addr, [](const SYMBOLPTR * info, void* userdata)
+    //{
+    //    auto *modInfo = (MODEXPORT *)(info->symbol);
+    //    dprintf("ckz mod info name:%s\n", modInfo->name.c_str());
+    //    return true; // TODO: allow aborting (enumeration in a separate thread)
+    //}, NULL);
+    return true;
+}

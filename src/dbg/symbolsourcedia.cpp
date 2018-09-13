@@ -383,6 +383,8 @@ void SymbolSourceDIA::enumSymbols(const CbEnumSymbol & cbEnum)
     for(auto & it : _symAddrs)
     {
         const SymbolInfo & sym = _symData[it.second];
+
+        dprintf(QT_TRANSLATE_NOOP("DBG", "ckz enum hello\n"));
         if(!cbEnum(sym))
         {
             break;

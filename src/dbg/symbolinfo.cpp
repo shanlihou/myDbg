@@ -292,6 +292,7 @@ bool SymAddrFromName(const char* Name, duint* Address)
     // Skip 'OrdinalXXX'
     if(!_strnicmp(Name, "Ordinal", 7))
         return false;
+    dprintf(QT_TRANSLATE_NOOP("DBG", "ckz:SymAddrFromName:%s\n"), Name);
 
     //TODO: refactor this in a function because this pattern will become common
     std::vector<duint> mods;

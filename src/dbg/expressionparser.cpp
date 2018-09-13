@@ -894,6 +894,7 @@ bool ExpressionParser::Calculate(duint & value, bool signedcalc, bool allowassig
         else
             stack.push_back(EvalValue(token.data()));
     }
+
     if(stack.size() != 1) //there should only be one value left on the stack
         return false;
     return stack[stack.size() - 1].DoEvaluate(value, silent, baseonly, value_size, isvar, hexonly);

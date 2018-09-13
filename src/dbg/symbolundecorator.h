@@ -34,7 +34,7 @@ enum
 };
 
 #if _MSC_VER != 1800
-#error unDNameEx is undocumented and possibly unsupported on your runtime! Uncomment this line if you understand the risks and want continue regardless...
+//#error unDNameEx is undocumented and possibly unsupported on your runtime! Uncomment this line if you understand the risks and want continue regardless...
 #endif //_MSC_VER
 
 //undname.cxx

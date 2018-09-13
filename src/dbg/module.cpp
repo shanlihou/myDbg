@@ -639,6 +639,7 @@ bool ModLoad(duint Base, duint Size, const char* FullPath)
     // Handle a new module being loaded
     if(!Base || !Size || !FullPath)
         return false;
+    dprintf(QT_TRANSLATE_NOOP("DBG", "ckz modLoad: %s\n"), FullPath);
 
     auto infoPtr = std::make_unique<MODINFO>();
     auto & info = *infoPtr;
@@ -746,6 +747,7 @@ bool ModLoad(duint Base, duint Size, const char* FullPath)
     EXCLUSIVE_ACQUIRE(LockModules);
     modinfo.insert(std::make_pair(Range(Base, Base + Size - 1), std::move(infoPtr)));
     EXCLUSIVE_RELEASE();
+    dprintf("ckz info size:%d\n", info.exports.size());
 
     // Put labels for virtual module exports
     if(virtualModule)
